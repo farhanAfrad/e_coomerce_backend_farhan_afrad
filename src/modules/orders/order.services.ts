@@ -18,12 +18,24 @@ const createOrderIntoDB = async (orderData: TOrder) => {
         await Product.updateOne({ _id: result.productId }, { "inventory.quantity": newQuantity })
         return result;
     }
+}
 
+const getAllOrdersFromDB = async () => {
+    const result = await Order.find();
 
+    if (result.length === 0) {
+        throw new Error("Order not found");
+    }
+    return result;
+}
 
-
+const getOrdersByEmailFromDB = async (email: string) => {
+    const result = await Order.find({ email: email });
+    return result;
 }
 
 export const orderServices = {
-    createOrderIntoDB
+    createOrderIntoDB,
+    getAllOrdersFromDB,
+    getOrdersByEmailFromDB
 }
