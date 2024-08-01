@@ -25,9 +25,12 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllOrSearchedProducts = async (req: Request, res: Response) => {
     try {
+        // as we are same route for getting data based on search or just to find all data 1st we are trying to retrive the searched value from url
         const searchTerm = req.query.searchTerm as string;
         let result;
 
+
+        // if serached value is there then it will prove the searchProductFromDB function with the searched value if just trying to get all the data then getAllProductsFromDB function is called
         if (searchTerm) {
             result = await productServices.searchProductFromDB(searchTerm);
         } else {
