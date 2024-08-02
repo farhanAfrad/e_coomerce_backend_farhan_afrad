@@ -34,7 +34,10 @@ const getAllOrdersOrGetByEmail = async (req: Request, res: Response) => {
         }
 
         else {
-            if (givenEmail) {
+            if (givenEmail === '') {
+                throw new Error("Order not found")
+            }
+            else {
                 result = await orderServices.getOrdersByEmailFromDB(givenEmail);
             }
         }

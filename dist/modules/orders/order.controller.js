@@ -39,7 +39,10 @@ const getAllOrdersOrGetByEmail = (req, res) => __awaiter(void 0, void 0, void 0,
             result = yield order_services_1.orderServices.getAllOrdersFromDB();
         }
         else {
-            if (givenEmail) {
+            if (givenEmail === '') {
+                throw new Error("Order not found");
+            }
+            else {
                 result = yield order_services_1.orderServices.getOrdersByEmailFromDB(givenEmail);
             }
         }
