@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { validatedOrderSchema } from "./order.validation.zod";
 import { orderServices } from "./order.services";
 
+
 const createOrder = async (req: Request, res: Response) => {
     try {
         const orderData = req.body;
@@ -25,11 +26,21 @@ const createOrder = async (req: Request, res: Response) => {
 const getAllOrdersOrGetByEmail = async (req: Request, res: Response) => {
     try {
         const givenEmail = req.query.email as string;
+        const isEmpty = (obj: any) => Object.keys(obj).length === 0;
+
         let result;
-        if (givenEmail) {
-            result = await orderServices.getOrdersByEmailFromDB(givenEmail);
+        if (isEmpty(req.query)) {
+            result = await orderServices.getAllOrdersFromDB();
         }
-        result = await orderServices.getAllOrdersFromDB();
+
+        else {
+            if (givenEmail) {
+                result = await orderServices.getOrdersByEmailFromDB(givenEmail);
+            }
+        }
+
+
+
         res.status(200).json({
             success: true,
             message: `${givenEmail ? "Orders fetched successfully for user email!" : "Orders fetched successfully!"}`,
