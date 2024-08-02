@@ -45,6 +45,9 @@ const getAllOrdersFromDB = () => __awaiter(void 0, void 0, void 0, function* () 
 });
 const getOrdersByEmailFromDB = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield order_model_1.Order.find({ email: email });
+    if (result.length === 0) {
+        throw new Error("Order not found");
+    }
     return result;
 });
 exports.orderServices = {

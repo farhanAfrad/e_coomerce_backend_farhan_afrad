@@ -33,11 +33,16 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 const getAllOrdersOrGetByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const givenEmail = req.query.email;
+        const isEmpty = (obj) => Object.keys(obj).length === 0;
         let result;
-        if (givenEmail) {
-            result = yield order_services_1.orderServices.getOrdersByEmailFromDB(givenEmail);
+        if (isEmpty(req.query)) {
+            result = yield order_services_1.orderServices.getAllOrdersFromDB();
         }
-        result = yield order_services_1.orderServices.getAllOrdersFromDB();
+        else {
+            if (givenEmail) {
+                result = yield order_services_1.orderServices.getOrdersByEmailFromDB(givenEmail);
+            }
+        }
         res.status(200).json({
             success: true,
             message: `${givenEmail ? "Orders fetched successfully for user email!" : "Orders fetched successfully!"}`,
