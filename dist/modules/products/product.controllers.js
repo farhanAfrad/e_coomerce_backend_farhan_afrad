@@ -33,8 +33,10 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 const getAllOrSearchedProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // as we are same route for getting data based on search or just to find all data 1st we are trying to retrive the searched value from url
         const searchTerm = req.query.searchTerm;
         let result;
+        // if serached value is there then it will prove the searchProductFromDB function with the searched value if just trying to get all the data then getAllProductsFromDB function is called
         if (searchTerm) {
             result = yield product_services_1.productServices.searchProductFromDB(searchTerm);
         }

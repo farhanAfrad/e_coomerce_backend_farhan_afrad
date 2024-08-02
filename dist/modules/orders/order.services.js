@@ -13,18 +13,27 @@ exports.orderServices = void 0;
 const product_model_1 = require("../products/product.model");
 const order_model_1 = require("./order.model");
 const createOrderIntoDB = (orderData) => __awaiter(void 0, void 0, void 0, function* () {
+    // 1stly productId from order data is retrieved
     const productData = yield product_model_1.Product.findById(orderData.productId);
-    // console.log(productData.inventory.quantity);
+    // as ordered product could not be in the database hence the value can be null that's why it is added in the condition then also checked product quantity is available
     if (productData !== null && productData.inventory.quantity > 0) {
+        // if ordered quantity is larger than the available product quantity than an message will send to the customer
         if (orderData.quantity > productData.inventory.quantity) {
             throw new Error("Insufficient quantity available in inventory");
         }
         const result = yield order_model_1.Order.create(orderData);
-        // const productId = result.productId;
+        // here calculation is done after order how much quantiy is available
         const newQuantity = productData.inventory.quantity - orderData.quantity;
         // console.log(newQuantity);
-        yield product_model_1.Product.updateOne({ _id: result.productId }, { "inventory.quantity": newQuantity });
+        const modifiedProduct = yield product_model_1.Product.findByIdAndUpdate({ _id: result.productId }, { "inventory.quantity": newQuantity }, { new: true });
+        // when product quantity reaches 0 inStock will change to false
+        if ((modifiedProduct === null || modifiedProduct === void 0 ? void 0 : modifiedProduct.inventory.quantity) === 0) {
+            yield product_model_1.Product.findByIdAndUpdate({ _id: result.productId }, { "inventory.inStock": false }, { new: true });
+        }
         return result;
+    }
+    else {
+        throw new Error("Insufficient quantity available in inventory");
     }
 });
 const getAllOrdersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {

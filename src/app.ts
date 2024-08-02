@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { productRoutes } from './modules/products/product.routes';
 import { orderRoutes } from './modules/orders/order.routes';
@@ -16,13 +16,12 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-app.use((req: Request, res: Response, next
+app.use((req: Request, res: Response
 ) => {
     res.status(404).json({
         success: false,
         message: "Route not found",
     });
-    next();
 });
 
 
